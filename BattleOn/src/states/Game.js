@@ -13,12 +13,21 @@ export default class extends Phaser.State {
     this.add.plugin(PhaserInput.Plugin);
     this.game.load.tilemap('level1', 'assets/images/level1.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('tiles-1', 'assets/images/tiles-1.png');
-    this.game.load.spritesheet('dude', 'assets/images/dude.png', 100, 48);
+	//118,167
+    this.game.load.spritesheet('dude', 'assets/images/dude.png', 32, 48);
 	//this.game.load.spritesheet('pumpkin', 'assets/images/pumpkin.png', 32, 48);
     this.game.load.spritesheet('droid', 'assets/images/droid.png', 32, 32);
     this.game.load.image('starSmall', 'assets/images/star.png');
     this.game.load.image('starBig', 'assets/images/star2.png');
     this.game.load.image('background', 'assets/images/background2.png', window.innerWidth, window.innerHeight);
+	  this.game.load.image('cloud', 'assets/images/cloud.png');
+    this.game.load.image('tile', 'assets/images/tile.png');
+	
+/*	
+	this.game.load.image('arrow', 'assets/images/arrow.png');
+    this.game.load.image('bullet', 'assets/images/purple_ball.png');
+	
+	*/
 	//this.game.load.image('bat', 'assets/images/bat.gif', 32, 48);
 	//this.load.spritesheet('letter', 'assets/images/letters.png',75,85);
 
@@ -84,9 +93,25 @@ update() {
 	//		}
 	//	}
 	//}
+		    this.game.physics.arcade.collide(this.player, this.tile);
 
-    //this.player.body.velocity.x = 0;
- /*   if (this.cursors.left.isDown)
+ this.game.add.sprite(200, 50, 'cloud');
+this.game.add.text(250, 120, 'Apple', { font: "40px Fontdiner Swanky", fill: "#19de65" });
+
+
+/*sprite.rotation = game.physics.arcade.angleToPointer(sprite);
+
+    if (game.input.activePointer.isDown)
+    {
+        fire();
+    }
+	
+	*/
+	
+   this.player.body.velocity.x = 0;
+   //    this.textBox[1].setText(this.currentWord);
+
+   if (this.cursors.left.isDown)
     {
         this.player.body.velocity.x = -150;
 
@@ -131,24 +156,76 @@ update() {
         this.jumpTimer = this.game.time.now + 750;
     }
 	
-	*/
+	
 }
+
+/*var sprite;
+var bullets;
+
+var fireRate = 100;
+var nextFire = 0;
+*/
 
  create() {
    // this.pumpkinHitCount= 0;
     //this.facing = 'right';
-    //this.jumpTimer = 0;
+    this.jumpTimer = 0;
     //this.score = 0;
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+	
 
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+	
+	
+
+/*
+    bullets = this.game.add.group();
+    this.bullets.enableBody = true;
+    this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+    this.bullets.createMultiple(50, 'bullet');
+    this.bullets.setAll('checkWorldBounds', true);
+    this.bullets.setAll('outOfBoundsKill', true);
+    
+    this.sprite = this.game.add.sprite(400, 300, 'arrow');
+    this.sprite.anchor.set(0.5);
+
+    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+
+    this.sprite.body.allowRotation = false;
+	*/
+	
+	
+	
+this.game.physics.arcade.gravity.y = 250;
       this.game.stage.backgroundColor = '#000000';
       this.bg = this.game.add.tileSprite(0, 0, window.innerWidth, window.innerHeight, 'background');
       this.bg.fixedToCamera = true;
 	  
-	  this.player = game.add.sprite(32, 32, 'dude');
-	  this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+	  this.player = game.add.sprite(32, 48, 'dude');
+	       this.tile = this.game.add.tileSprite(0, this.game.height - 167 - 10, window.innerWidth, 167, 'tile');
+   // this.title.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
 
-      this.player.body.bounce.y = 0.2;
+	  this.game.physics.enable([this.player, this.tile], Phaser.Physics.ARCADE);
+	  this.player.body.collideWorldBounds = true;
+	 // this.tile.collide = true;
+	  	 // this.game.physics.enable(this.tile, Phaser.Physics.ARCADE);
+
+	  
+	 //sprite1 = this.add.tileSprite(100, 100, 150, 150, 'tile');
+
+	  //    this.matter.add.gameObject(sprite1).setFrictionAir(0.001).setBounce(0.8);
+	  
+	     this.tile.body.collideWorldBounds = true;
+    this.tile.body.immovable = true;
+    this.tile.body.allowGravity = false;
+
+	
+
+     this.player.animations.add('turn', [4], 20, true);
+      this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+     
+	 this.player.body.bounce.y = 0.2;
       this.player.body.collideWorldBounds = true;
       this.player.body.setSize(20, 32, 5, 16);
 
@@ -156,9 +233,20 @@ update() {
       this.player.animations.add('left', [0, 1, 2, 3], 10, true);
       this.player.animations.add('turn', [4], 20, true);
       this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	  
+	  this.cursors =  this.game.input.keyboard.createCursorKeys();
+     this.jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+	  
+	  
+	  
+	  
 
      this.game.camera.follow(this.player);
-
+	 dtml.getWords(1, this.renderwords, this);
+     this.scoreText = this.game.add.text(600, 96, 'Score: 0', { fontSize: '16px', fill: '#fff' });
+	 
+	 
 
     //  this.map = this.game.add.tilemap('level1');
 
@@ -208,7 +296,8 @@ enterletter(a)
 
 submitAnswer(a)
 {
- var fail = false;
+ 
+ /*var fail = false;
 
  for(var i = 0; i < this.currentWord.length; i++)
   {
@@ -226,14 +315,14 @@ submitAnswer(a)
       this.scoreText.text = 'Score: ' + this.score.toString();
   }
   else{
-	 this.addBats();
   }
   /*} else {
       this.player.kill();
   }*/
 
-  this.reloadPumpkins();
-  this.getNewWord();
+  //this.reloadPumpkins();
+  //this.getNewWord();
+  
 }
 
 clearTextBoxs() {
@@ -266,29 +355,9 @@ addPumpkins(numberOfPumpkins) {
 	*/
 }
 
-addBats()
-{
-	var imagex = this.game.add.sprite(800, 160, 'bat');
-	imagex.scale.setTo(0.5,0.5);
-	this.game.physics.enable(imagex, Phaser.Physics.ARCADE);
-	imagex.body.allowGravity = false;
-	imagex.body.velocity.x=-150;
-	this.game.physics.arcade.collide(this.imagex, this.player, this.hitBat, null, this);
 
-	//imagex.body.collideWorldBounds = true;
-	this.reloadPumpkins();
-	
-	//image.body.onCollide = 
-	
 
-}
 
-reloadPumpkins() {
-    // refill all the hit pumpkins
-    this.addPumpkins(this.pumpkinHitCount);
-    this.maxPumpkins += this.pumpkinHitCount;
-    this.pumpkinHitCount = 0;
-}
 getNewWord() {
 
     dtml.getWords(1, this.renderwords, this);
@@ -334,28 +403,46 @@ renderwords(data, that)
       }
 
 	  that.currentWord = data.words[j];
-
-	  for(var i = 0; i < that.currentWord.length; i++)
-	   {
+	  
+	  
+	 
+	 
+/*var i=0;
+	 //for(var i = 0; i < that.currentWord.length; i++)
+	  // {
 	  	that.letters[i] = that.game.add.button(80+80*i, 10, 'letter', that.enterletter, that,1,0,0,0);
-		that.textBox[i] = that.add.inputField(80+80*i+10, 20, {
+		that.textBox[i] = that.add.inputField(80++200+80*i+10, 20, {
             font: '40px Arial',
             fontWeight: 'bold',
             width: 40,
             padding: 8,
 			fill: '#fff',
-			backgroundColor: 'transparent',
+			backgroundColor: 'blue',
             borderWidth: 1,
             borderColor: '#000',
             borderRadius: 6,
             placeHolder: '',
             focusOutOnEnter: false,
         });
-	  }
+	 // }
 
-
+*/
 	  that.sumbmitbutton = that.game.add.button(80*(data.words[j].length+1), 10, 'button', that.submitAnswer, that,1,0,0,0);
 	  that.sumbmitbuttonText = that.game.add.text(that.sumbmitbutton.x+30, that.sumbmitbutton.y+20, "Submit", { font: "30px sans-serif", fill: "#ffffff", stroke:"#000000", strokeThickness:"6"      });
+}
+fire() {
+
+    if (game.time.now > nextFire && bullets.countDead() > 0)
+    {
+        nextFire = game.time.now + fireRate;
+
+        var bullet = bullets.getFirstDead();
+
+        bullet.reset(sprite.x - 8, sprite.y - 8);
+
+        game.physics.arcade.moveToPointer(bullet, 300);
+    }
+
 }
 
 
