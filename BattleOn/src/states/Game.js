@@ -19,6 +19,8 @@ export default class extends Phaser.State {
     this.game.load.image('starSmall', 'assets/images/star.png');
     this.game.load.image('starBig', 'assets/images/star2.png');
     this.game.load.image('background', 'assets/images/background2.png', window.innerWidth, window.innerHeight);
+    this.game.load.image('cloud', 'assets/images/cloud.png');
+    this.game.load.image('tile', 'assets/images/tile.png');
 	//this.game.load.image('bat', 'assets/images/bat.gif', 32, 48);
 	//this.load.spritesheet('letter', 'assets/images/letters.png',75,85);
 
@@ -158,6 +160,12 @@ update() {
       this.player.animations.add('right', [5, 6, 7, 8], 10, true);
 
      this.game.camera.follow(this.player);
+
+     this.game.add.sprite(200, 50, 'cloud');
+     
+
+     this.tile = this.game.add.tileSprite(0, this.game.height - 167 - 5, window.innerWidth, 167, 'tile');
+
 
 
     //  this.map = this.game.add.tilemap('level1');
